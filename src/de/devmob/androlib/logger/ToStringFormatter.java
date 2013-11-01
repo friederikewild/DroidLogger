@@ -98,6 +98,11 @@ public class ToStringFormatter
         return sb.toString();
     }
 
+    public static String getString(Throwable t)
+    {
+        return android.util.Log.getStackTraceString(t);
+    }
+
     /**
      * Overloaded method for all otherwise unmapped methods.
      * Handles null value as well!
