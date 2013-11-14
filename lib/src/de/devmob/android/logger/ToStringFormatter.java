@@ -36,6 +36,14 @@ import android.database.Cursor;
  */
 public class ToStringFormatter
 {
+    public static String getConcatenatedString(Object object1, Object object2)
+    {
+        return new StringBuilder()
+        .append(getString(object1))
+        .append(getString(object2))
+        .toString();
+    }
+
     public static String getString(Collection<?> set)
     {
         StringBuilder sb = new StringBuilder();

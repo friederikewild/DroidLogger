@@ -24,16 +24,16 @@ import android.util.Log;
  * Simple wrapper around the android logging class Logger.
  * Adjust log level according to the purpose of the binary
  * and remove for release with e.g. 
- * -assumenosideeffects class de.devmob.androlib.logger.Logger {
+ * -assumenosideeffects class de.devmob.android.logger.Logger {
     public static int v(...);
     [...]
     }
  * 
  * To avoid calls like 
  * Logger.v(TAG, "index=" + i);
- * that are internally creating new StringBuilder objects
- * methods per log level are provided to pass a string message and an object.
- * Only when the log level matches the string representations are then appended.
+ * that are internally creating new StringBuilder objects even if logging is turned off.
+ * Instead methods per log level are provided to pass a message and an object.
+ * Only when the log level matches, the string representations are concatenated.
  * 
  * In case more then two objects should be logged, protect logging code with e.g.
  * if (Logger.shouldLog(Log.DEBUG))
@@ -46,20 +46,6 @@ public class Logger
      * Includes all higher priorities:
      * DEBUG, INFO, WARN, ERROR */
     public static int MIN_ACTIVATED_LOG_LEVEL = Log.DEBUG;
-
-    /**
-     * Send a {@link #VERBOSE} log message.
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void v(String tag, String msg)
-    {
-        if (shouldLog(Log.VERBOSE))
-        {
-            Log.v(tag, msg);
-        }
-    }
 
     /**
      * Send a {@link #VERBOSE} log message.
@@ -82,11 +68,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param object The object you would like logged.
      */
-    public static void v(String tag, String msg, Object object)
+    public static void v(String tag, Object msg, Object object)
     {
         if (shouldLog(Log.VERBOSE))
         {
-            Log.v(tag, msg + ToStringFormatter.getString(object));
+            Log.v(tag, ToStringFormatter.getConcatenatedString(msg, object));
         }
     }
 
@@ -97,11 +83,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    public static void v(String tag, String msg, Throwable tr)
+    public static void v(String tag, Object msg, Throwable tr)
     {
         if (shouldLog(Log.VERBOSE))
         {
-            Log.v(tag, msg, tr);
+            Log.v(tag, ToStringFormatter.getString(msg), tr);
         }
     }
 
@@ -113,25 +99,11 @@ public class Logger
      * @param object The object you would like logged.
      * @param tr An exception to log
      */
-    public static void v(String tag, String msg, Object object, Throwable tr)
+    public static void v(String tag, Object msg, Object object, Throwable tr)
     {
         if (shouldLog(Log.VERBOSE))
         {
-            Log.v(tag, msg + ToStringFormatter.getString(object), tr);
-        }
-    }
-
-    /**
-     * Send a {@link #DEBUG} log message.
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void d(String tag, String msg)
-    {
-        if (shouldLog(Log.DEBUG))
-        {
-            Log.d(tag, msg);
+            Log.v(tag, ToStringFormatter.getConcatenatedString(msg, object), tr);
         }
     }
 
@@ -145,7 +117,7 @@ public class Logger
     {
         if (shouldLog(Log.DEBUG))
         {
-            d(tag, ToStringFormatter.getString(object));
+            Log.d(tag, ToStringFormatter.getString(object));
         }
     }
 
@@ -156,11 +128,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param object The object you would like logged.
      */
-    public static void d(String tag, String msg, Object object)
+    public static void d(String tag, Object msg, Object object)
     {
         if (shouldLog(Log.DEBUG))
         {
-            d(tag, msg + ToStringFormatter.getString(object));
+            Log.d(tag, ToStringFormatter.getConcatenatedString(msg, object));
         }
     }
 
@@ -171,11 +143,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    public static void d(String tag, String msg, Throwable tr)
+    public static void d(String tag, Object msg, Throwable tr)
     {
         if (shouldLog(Log.DEBUG))
         {
-            Log.d(tag, msg, tr);
+            Log.d(tag, ToStringFormatter.getString(msg), tr);
         }
     }
 
@@ -187,25 +159,11 @@ public class Logger
      * @param object The object you would like logged.
      * @param tr An exception to log
      */
-    public static void d(String tag, String msg, Object object, Throwable tr)
+    public static void d(String tag, Object msg, Object object, Throwable tr)
     {
         if (shouldLog(Log.DEBUG))
         {
-            d(tag, msg + ToStringFormatter.getString(object), tr);
-        }
-    }
-
-    /**
-     * Send an {@link #INFO} log message.
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void i(String tag, String msg)
-    {
-        if (shouldLog(Log.INFO))
-        {
-            Log.i(tag, msg);
+            Log.d(tag, ToStringFormatter.getConcatenatedString(msg, object), tr);
         }
     }
 
@@ -219,7 +177,7 @@ public class Logger
     {
         if (shouldLog(Log.INFO))
         {
-            i(tag, ToStringFormatter.getString(object));
+            Log.i(tag, ToStringFormatter.getString(object));
         }
     }
 
@@ -230,11 +188,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param object The message you would like logged.
      */
-    public static void i(String tag, String msg, Object object)
+    public static void i(String tag, Object msg, Object object)
     {
         if (shouldLog(Log.INFO))
         {
-            i(tag, msg + ToStringFormatter.getString(object));
+            Log.i(tag, ToStringFormatter.getConcatenatedString(msg, object));
         }
     }
 
@@ -245,11 +203,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    public static void i(String tag, String msg, Throwable tr)
+    public static void i(String tag, Object msg, Throwable tr)
     {
         if (shouldLog(Log.INFO))
         {
-            Log.i(tag, msg, tr);
+            Log.i(tag, ToStringFormatter.getString(msg), tr);
         }
     }
 
@@ -261,25 +219,11 @@ public class Logger
      * @param object The message you would like logged.
      * @param tr An exception to log
      */
-    public static void i(String tag, String msg, Object object, Throwable tr)
+    public static void i(String tag, Object msg, Object object, Throwable tr)
     {
         if (shouldLog(Log.INFO))
         {
-            i(tag, msg + ToStringFormatter.getString(object), tr);
-        }
-    }
-
-    /**
-     * Send a {@link #WARN} log message.
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void w(String tag, String msg)
-    {
-        if (shouldLog(Log.WARN))
-        {
-            Log.w(tag, msg);
+            Log.i(tag, ToStringFormatter.getConcatenatedString(msg, object), tr);
         }
     }
 
@@ -293,7 +237,7 @@ public class Logger
     {
         if (shouldLog(Log.WARN))
         {
-            w(tag, ToStringFormatter.getString(object));
+            Log.w(tag, ToStringFormatter.getString(object));
         }
     }
 
@@ -304,11 +248,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param object The message you would like logged.
      */
-    public static void w(String tag, String msg, Object object)
+    public static void w(String tag, Object msg, Object object)
     {
         if (shouldLog(Log.WARN))
         {
-            w(tag, msg + ToStringFormatter.getString(object));
+            Log.w(tag, ToStringFormatter.getConcatenatedString(msg, object));
         }
     }
 
@@ -319,11 +263,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    public static void w(String tag, String msg, Throwable tr)
+    public static void w(String tag, Object msg, Throwable tr)
     {
         if (shouldLog(Log.WARN))
         {
-            Log.w(tag, msg, tr);
+            Log.w(tag, ToStringFormatter.getString(msg), tr);
         }
     }
 
@@ -335,11 +279,11 @@ public class Logger
      * @param object The message you would like logged.
      * @param tr An exception to log
      */
-    public static void w(String tag, String msg, Object object, Throwable tr)
+    public static void w(String tag, Object msg, Object object, Throwable tr)
     {
         if (shouldLog(Log.WARN))
         {
-            w(tag, msg + ToStringFormatter.getString(object), tr);
+            Log.w(tag, ToStringFormatter.getConcatenatedString(msg, object), tr);
         }
     }
 
@@ -361,27 +305,13 @@ public class Logger
      * Send an {@link #ERROR} log message.
      * @param tag Used to identify the source of a log message.  It usually identifies
      *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void e(String tag, String msg)
-    {
-        if (shouldLog(Log.ERROR))
-        {
-            Log.e(tag, msg);
-        }
-    }
-
-    /**
-     * Send an {@link #ERROR} log message.
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
      * @param object The message you would like logged.
      */
     public static void e(String tag, Object object)
     {
         if (shouldLog(Log.ERROR))
         {
-            e(tag, ToStringFormatter.getString(object));
+            Log.e(tag, ToStringFormatter.getString(object));
         }
     }
 
@@ -392,11 +322,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param object The message you would like logged.
      */
-    public static void e(String tag, String msg, Object object)
+    public static void e(String tag, Object msg, Object object)
     {
         if (shouldLog(Log.ERROR))
         {
-            e(tag, msg + ToStringFormatter.getString(object));
+            Log.e(tag, ToStringFormatter.getConcatenatedString(msg, object));
         }
     }
 
@@ -407,11 +337,11 @@ public class Logger
      * @param msg The message you would like logged.
      * @param tr An exception to log
      */
-    public static void e(String tag, String msg, Throwable tr)
+    public static void e(String tag, Object msg, Throwable tr)
     {
         if (shouldLog(Log.ERROR))
         {
-            Log.e(tag, msg, tr);
+            Log.e(tag, ToStringFormatter.getString(msg), tr);
         }
     }
 
@@ -423,11 +353,11 @@ public class Logger
      * @param object The message you would like logged.
      * @param tr An exception to log
      */
-    public static void e(String tag, String msg, Object object, Throwable tr)
+    public static void e(String tag, Object msg, Object object, Throwable tr)
     {
         if (shouldLog(Log.ERROR))
         {
-            e(tag, msg + ToStringFormatter.getString(object), tr);
+            Log.e(tag, ToStringFormatter.getConcatenatedString(msg, object), tr);
         }
     }
 
@@ -442,21 +372,6 @@ public class Logger
         if (shouldLog(Log.ERROR))
         {
             Log.e(tag, "", tr);
-        }
-    }
-
-    /**
-     * Low-level logging call.
-     * @param priority The priority/type of this log message
-     * @param tag Used to identify the source of a log message.  It usually identifies
-     *        the class or activity where the log call occurs.
-     * @param msg The message you would like logged.
-     */
-    public static void println(int priority, String tag, String msg)
-    {
-        if (shouldLog(priority))
-        {
-            Log.println(priority, tag, msg);
         }
     }
 
