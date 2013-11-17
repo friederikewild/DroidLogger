@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DroidLoggerDemo</string>
+    <string name="title_activity_main">Logging Demo</string>
+
+    
+    <!-- Info dialog -->
+    <string name="menu_info">Info</string>
+
+    <string name="text_info">This app demonstrates the usage of the &lt;br />
+        &lt;a href=\"https://github.com/friederikewild/DroidLogger\">DroidLogger Library&lt;/a>&lt;br />
+        created by Friederike Wild
+    </string>
+    
+</resources>
