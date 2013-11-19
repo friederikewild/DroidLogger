@@ -16,7 +16,7 @@ package de.devmob.android.logger.demo.data;
 
 public class CharArrayExample extends ObjectExample<char[]>
 {
-    private final char[] charArray = { 'a', 'b', 'c', '@', 'Û', '$', '¡' };
+    private final char[] charArray = { 'a', 'b', 'c', '@', 'â‚¬', '$', 'Â°' };
 
     public CharArrayExample()
     {

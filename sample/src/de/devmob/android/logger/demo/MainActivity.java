@@ -62,11 +62,16 @@ public class MainActivity extends ListActivity
     @Override
     protected void onStop()
     {
-        for (Example object : example.getExamples())
+        if (example != null)
         {
-            object.close();
+            for (Example object : example.getExamples())
+            {
+                object.close();
+            }
+            example = null;
         }
-        example = null;
+
+        super.onStop();
     }
 
     @Override
